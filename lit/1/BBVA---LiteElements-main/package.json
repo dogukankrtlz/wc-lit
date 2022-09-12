@@ -1,0 +1,27 @@
+{
+  "name": "bbva---liteelements",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "web-dev-server --node-resolve --open --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/efmargareto/BBVA---LiteElements.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/efmargareto/BBVA---LiteElements/issues"
+  },
+  "homepage": "https://github.com/efmargareto/BBVA---LiteElements#readme",
+  "devDependencies": {
+    "@web/dev-server": "^0.1.34"
+  },
+  "dependencies": {
+    "lit": "^2.3.1"
+  }
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Form</title>
+  </head>
+
+  <body>
+    <db-form-field
+      label="Name"
+      type="text"
+      error-message="This field is required!"
+      required
+    >
+      <span>This content is slotted!</span>
+    </db-form-field>
+    <db-form-field
+      label="Email"
+      type="text"
+      error-message="This field is required!"
+      required
+    >
+    </db-form-field>
+    <hr />
+    <h2>Demo</h2>
+    <button
+      onclick="document.querySelector('db-form-field').invalid = !document.querySelector('db-form-field').invalid"
+    >
+      Toggle "Name" field invalid state
+    </button>
+    <script src="./dbFormField.js"></script>
+    <script></script>
+  </body>
+</html>
