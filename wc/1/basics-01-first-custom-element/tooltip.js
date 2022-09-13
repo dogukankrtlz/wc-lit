@@ -4,10 +4,10 @@ class Tooltip extends HTMLElement {
   }
 
   connectedCallback() {
-    const tooltipIcon = document.createElement('span');
-    tooltipIcon.textContent = ' (?)';
+    const tooltipIcon = document.createElement("span");
+    tooltipIcon.textContent = " (?)";
     this.appendChild(tooltipIcon);
   }
 }
 
-customElements.define('uc-tooltip', Tooltip);
+customElements.define("uc-tooltip", Tooltip);
