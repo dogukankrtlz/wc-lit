@@ -1,0 +1,50 @@
+
+    return this.userName
+      ? html`
+          <div class="movie-container">
+            <div class="image-container">
+              <img src=${this.getAttribute("poster")} />
+            </div>
+
+            <div class="info" id="info">
+              <h3 class="title">${this.title}</h3>
+
+              <p class="year">Year: ${this.getAttribute("year")}</p>
+
+              <p class="director">Director: ${this.getAttribute("director")}</p>
+
+              <p class="actors">Stars: ${this.getAttribute("actors")}</p>
+
+              <div class="action_container">
+                <button @click="${this.toggleDescription}">Description</button>
+
+                <br />
+
+                <p class="description">${this.getAttribute("description")}</p>
+              </div>
+            </div>
+          </div>
+        `
+      : html`
+          <div class="movie-container">
+            <div class="image-container">
+              <img src=${this.getAttribute("poster")} />
+            </div>
+
+            <div class="info" id="info">
+              <h3 class="title">${this.title}</h3>
+
+              <p class="year">Year: ${this.getAttribute("year")}</p>
+
+              <p class="director">Director: ${this.getAttribute("director")}</p>
+
+              <div class="action_container">
+                <button @click="${this.toggleDescription}">Description</button>
+
+                <br />
+
+                <p class="description">${this.getAttribute("description")}</p>
+              </div>
+            </div>
+          </div>
+        `;
