@@ -161,18 +161,31 @@ class NavBar extends LitElement {
   constructor() {
     super();
     this.navPages = [
-      { text: "PERSONAS", active: true, url: "#", selected: "personas" },
       {
-        text: "AUTÓNOMOS Y EMPRESAS",
+        text: "LIST MOVIES",
         active: false,
         url: "#",
-        selected: "empresas",
+        selected: "movie-list",
+        all: true,
+      },
+      {
+        text: "ADD NEW MOVİE",
+        active: false,
+        url: "#",
+        selected: "movie-add",
+        all: true,
+      },
+      {
+        text: "PROFILE",
+        active: true,
+        url: "#",
+        selected: "user-profile",
+        all: true,
       },
     ];
   }
 
   activeButton(event) {
-    console.log("Butona basıldı -> Navbar değişti->" + event.target.innerText);
     const input = event.target;
     this.navPages.forEach((item) =>
       input.innerText === item.text
@@ -188,6 +201,9 @@ class NavBar extends LitElement {
         detail: url,
       })
     );
+  }
+  logOut() {
+    this.dispatchEvent(new CustomEvent("logout", {}));
   }
 
   paintTabs() {
@@ -210,16 +226,21 @@ class NavBar extends LitElement {
       <div class="container">
         <div class="navbar">
           <div class="navbar-block">
-            <img src="./images/logo-BBVA.svg" alt="logo" class="logo" />
+            <img
+              src="https://www.bbva.com/wp-content/uploads/2019/04/Logo-BBVA-1024x576.jpg"
+              alt="logo"
+              class="logo"
+            />
             ${this.paintTabs()}
           </div>
           <div class="navbar-block">
-            <a href="#" class="navbar-item navbar-item__newClient not-allowed">
-              <img src="./images/newclient.svg" />
-              Hazte cliente
-            </a>
-            <a href="#" class="navbar-item btn-green not-allowed">Acceso</a>
-            <div>Menu</div>
+            <a
+              @click=${this.logOut}
+              href="#"
+              class="navbar-item btn-green not-allowed"
+              >Logout</a
+            >
+            <div>Login</div>
           </div>
         </div>
       </div>

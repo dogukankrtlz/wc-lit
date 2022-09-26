@@ -29,7 +29,7 @@ export class GetApi extends LitElement {
   getData() {
     fetch(this.url, { method: this.method })
       .then((reponse) => {
-        return reponse.ok ? reponse.json() : Promise.reject(reponse);
+        return reponse.json();
       })
       .then((data) => this.sendResponse(data))
       .catch((err) => console.error("Ha ocurrido un error", err));

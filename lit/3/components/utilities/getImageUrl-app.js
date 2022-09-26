@@ -1,6 +1,6 @@
 import { LitElement, html } from "lit-element";
 
-export class GetApi extends LitElement {
+export class GetImageUrlApp extends LitElement {
   static get properties() {
     return {
       url: { type: String },
@@ -18,7 +18,7 @@ export class GetApi extends LitElement {
 
   sendResponse(data) {
     this.dispatchEvent(
-      new CustomEvent("ApiData", {
+      new CustomEvent("ImageData", {
         detail: { data },
         bubbles: true,
         composed: true,
@@ -29,11 +29,13 @@ export class GetApi extends LitElement {
   getData() {
     fetch(this.url, { method: this.method })
       .then((reponse) => {
-        return reponse.ok ? reponse.json() : Promise.reject(reponse);
+        return reponse.json();
       })
-      .then((data) => this.sendResponse(data))
+      .then((data) => {
+        this.sendResponse(data.results[0].poster_path);
+      })
       .catch((err) => console.error("Ha ocurrido un error", err));
   }
 }
 
-customElements.define("get-api", GetApi);
+customElements.define("get-image", GetImageUrlApp);
