@@ -137,9 +137,11 @@ export class MovieFormApp extends LitElement {
       albums: {
         id: Number,
         title: String,
-        year: Number,
+        rel_year: Number,
         rating: Number,
         genre: String,
+        image_url: String,
+        summary: String,
       },
     };
   }
@@ -152,18 +154,22 @@ export class MovieFormApp extends LitElement {
   login() {
     this.albums.id = this.$get("#id").value;
     this.albums.title = this.$get("#title").value;
-    this.albums.year = this.$get("#year").value;
+    this.albums.rel_year = this.$get("#rel_year").value;
     this.albums.rating = this.$get("#rating").value;
     this.albums.genre = this.$get("#genre").value;
+    this.albums.image_url = this.$get("#image_url").value;
+    this.albums.summary = this.$get("#summary").value;
 
     const error = this.$get("#error");
 
     if (
       this.albums.id &&
       this.albums.title &&
-      this.albums.year &&
+      this.albums.rel_year &&
       this.albums.genre &&
-      this.albums.rating
+      this.albums.rating &&
+      this.albums.image_url &&
+      this.albums.summary
     ) {
       this.postData("http://localhost:8080/movie", this.albums);
     } else {
@@ -192,7 +198,13 @@ export class MovieFormApp extends LitElement {
       redirect: "follow", // manual, *follow, error
       referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
       body: JSON.stringify(data), // body data type must match "Content-Type" header
-    }).then();
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
   }
   render() {
     return html`
@@ -230,9 +242,9 @@ export class MovieFormApp extends LitElement {
               value=""
             />
             <input
-              id="year"
+              id="rel_year"
               type="number"
-              name="year"
+              name="rel_year"
               max="2040"
               min="1895"
               placeholder="Release Year"
@@ -252,6 +264,20 @@ export class MovieFormApp extends LitElement {
               type="text"
               name="genre"
               placeholder="Genre"
+              value=""
+            />
+            <input
+              id="image_url"
+              type="text"
+              name="image_url"
+              placeholder="Image URL"
+              value=""
+            />
+            <input
+              id="summary"
+              type="text"
+              name="summary"
+              placeholder="Summary"
               value=""
             />
             <p id="error">Check The Rules!</p>

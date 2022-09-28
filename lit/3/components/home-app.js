@@ -34,8 +34,8 @@ export class HomeApp extends LitElement {
   }
 
   constructor() {
-    super(), (this.urlSelected = "user-profile");
-    this.success = false;
+    super(), (this.urlSelected = "movie-list");
+    this.success = true;
     this.genre = "";
     this.loginId;
     this.login = "login";

@@ -6,3 +6,5 @@ import "./components/profile/profile-app";
 import "./components/footer/footer-app";
 import "./components/login/login-app";
 import "./components/register/register-app";
+import "./components/moviepop/modaldialog-app";
+import "./components/dropdown/dropdown-app";

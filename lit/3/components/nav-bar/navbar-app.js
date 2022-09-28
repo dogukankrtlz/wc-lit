@@ -163,7 +163,7 @@ class NavBar extends LitElement {
     this.navPages = [
       {
         text: "LIST MOVIES",
-        active: false,
+        active: true,
         url: "#",
         selected: "movie-list",
         all: true,
@@ -177,7 +177,7 @@ class NavBar extends LitElement {
       },
       {
         text: "PROFILE",
-        active: true,
+        active: false,
         url: "#",
         selected: "user-profile",
         all: true,
