@@ -165,7 +165,16 @@ export class GetIsFavApi extends LitElement {
 
   render() {
     return this.fav == false
-      ? ""
+      ? html`
+          <div
+            class="readmore"
+            @click=${() => {
+              this.addFav(this.id);
+            }}
+          >
+            Add Favorites
+          </div>
+        `
       : html`
           <div
             class="readmore off"

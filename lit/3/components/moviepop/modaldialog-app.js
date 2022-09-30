@@ -63,6 +63,14 @@ class ModalDialogApp extends LitElement {
         display: inline-block;
         margin-top: 10px;
       }
+      .album_img {
+        min-width: 280px;
+        height: 420px;
+        position: relative;
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+      }
     `;
   }
   static get properties() {
@@ -70,6 +78,7 @@ class ModalDialogApp extends LitElement {
       open: { type: Boolean },
       title: { type: String },
       text: { type: String },
+      imageUrl: { type: String },
     };
   }
 
@@ -77,11 +86,26 @@ class ModalDialogApp extends LitElement {
     super();
     this.open = false;
   }
+  paintImage() {
+    console.log(this.imageUrl);
+    return (this.imageUrl = "Hello"
+      ? html` <div
+          class="album_img"
+          style="background: url(${this.imageUrl})"
+        ></div>`
+      : html` <div
+          class="album_img"
+          style="background: url(https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg)"
+        ></div>`);
+  }
+
   render() {
     return html`
       <div class="${classMap({ wrapper: true, open: this.open })}">
         <div class="overlay" @click="${this.close}"></div>
+
         <div class="dialog">
+          <div>${this.paintImage()}</div>
           <h1 id="title">${this.title}</h1>
           <div id="content" class="content">${this.text}</div>
           <button @click=${this.resetGame}>Okey</button>
