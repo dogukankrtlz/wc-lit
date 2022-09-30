@@ -307,6 +307,7 @@ export class FavoritePageApp extends LitElement {
       modal.open = true;
       modal.title = e.detail.title;
       modal.text = `Summary: ${e.detail.summary} `;
+      modal.imageUrl = e.detail.image_url;
     });
     this.addEventListener("reset-game", (e) => {
       const modal = this.shadowRoot.querySelector("modeldialog-app");

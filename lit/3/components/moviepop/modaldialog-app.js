@@ -26,8 +26,8 @@ class ModalDialogApp extends LitElement {
         align-items: center;
         display: flex;
         justify-content: center;
-        width: 960px;
-        height: 720px;
+        width: 100%;
+        height: 100%;
         opacity: 1;
         visibility: visible;
       }

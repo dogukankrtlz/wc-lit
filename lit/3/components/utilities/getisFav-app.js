@@ -98,7 +98,7 @@ export class GetIsFavApi extends LitElement {
       .catch((err) => {
         alert("DELETEDATAERROR");
       })
-      .finally((this.fav = !this.fav));
+      .finally((this.fav = false));
   }
   addFav(id) {
     let favorite = {};
@@ -155,7 +155,7 @@ export class GetIsFavApi extends LitElement {
       })
       .then((data) => {
         data.id != 0
-          ? (console.log("xd"), (this.favId = data.id))
+          ? (console.log("xd"), ((this.favId = data.id), (this.fav = true)))
           : (console.log("xd2"), (this.fav = false));
       })
       .catch((err) => {
@@ -164,7 +164,7 @@ export class GetIsFavApi extends LitElement {
   }
 
   render() {
-    return this.fav == false
+    return this.fav != true
       ? html`
           <div
             class="readmore"
