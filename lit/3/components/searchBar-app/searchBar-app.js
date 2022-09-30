@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit-element";
 
-export class DropDown extends LitElement {
+export class SearchBarApp extends LitElement {
   static get properties() {
     return {
       title: { type: String, reflect: true },
@@ -14,18 +14,28 @@ export class DropDown extends LitElement {
     return css`
       :host {
         --primary-color: #072146;
-        --text-color: #a59bff;
-
+        --text-color: #4d5464;
         font-family: "Poppins";
         font-size: 16px;
         color: var(--text-color);
-        width: 140px;
+        width: 700px;
         display: flex;
         flex-direction: column;
         background-color: transparent;
         user-select: none;
+        justify-content: center;
+        align-items: center;
       }
 
+      .container {
+        padding: 50px;
+        background-color: #072146;
+        width: 489px;
+        height: 120px;
+        border-radius: 20px;
+        justify-content: center;
+        align-items: center;
+      }
       .label {
         font-size: 12px;
         color: var(--primary-color);
@@ -109,27 +119,79 @@ export class DropDown extends LitElement {
         color: #fff;
         padding-left: 16px;
       }
+      button {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 10px 15px;
+        outline: none;
+      }
+
+      button {
+        width: 40%;
+        border-radius: 10px;
+        display: block;
+        font-size: 15px;
+        line-height: 24px;
+        will-change: background-position;
+        background-size: 210% 100%;
+        background-position: 99% center;
+        background-repeat: no-repeat;
+        -webkit-transition: background-position 0.66667s
+          cubic-bezier(0.24, 0.22, 0.31, 1.07);
+        transition: background-position 0.66667s
+          cubic-bezier(0.24, 0.22, 0.31, 1.07);
+        background-color: #028484;
+        background-image: linear-gradient(100deg, #02a5a5 50%, #028484 50%);
+        color: #fff;
+        text-align: center;
+        padding: 16px 32px;
+        background-color: #028484;
+        cursor: pointer;
+        margin-right: 25px;
+        text-decoration: none;
+        font-weight: 700;
+        border: none;
+        margin: 0;
+        margin-top: 14px;
+      }
+
+      button:hover {
+        background-position: 0 center;
+      }
+
+      /* .button {
+        background-color: #d81e5b;
+        color: white;
+        width: 40%;
+        font-size: 16px;
+        padding: 15px 32px;
+        border: none;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+      } */
+      .input {
+        padding: 20px;
+        border-radius: 10px;
+        width: 100%;
+        margin-top: 30px;
+        margin-left: -20px;
+      }
     `;
   }
 
   constructor() {
     super();
-    this.title = "Category";
-    this.value = "ALL";
-    this.options = ["WESTERN", "DRAMA", "ACTION", "CRIME", "ALL"];
-    this.closed = true;
+
+    this.value = "";
   }
 
-  toggleMenu() {
-    this.closed = !this.closed;
-  }
-
-  handleMenuOption(event, option) {
-    this.value = option;
-    this.toggleMenu(event);
+  handleMenuOption(searchValue) {
+    console.log("this value:" + searchValue);
     this.dispatchEvent(
-      new CustomEvent("selectionChanged", {
-        detail: { option },
+      new CustomEvent("search-update", {
+        detail: { searchValue },
         bubbles: true,
         composed: true,
       })
@@ -138,24 +200,24 @@ export class DropDown extends LitElement {
 
   render() {
     return html`
-      <div class="label">${this.title}</div>
-      <div class="head" @click="${this.toggleMenu}">
-        <div class="choice">${this.value}</div>
-        <div class="toggle ${this.closed ? "closed" : "open"}"></div>
-      </div>
-      <div class="body ${this.closed ? "closed" : "open"}">
-        ${this.options.map(
-          (option) =>
-            html`<div
-              class="option"
-              @click="${(e) => this.handleMenuOption(e, option)}"
-            >
-              ${option}
-            </div>`
-        )}
+      <div class="container">
+      
+          <input
+            placeholder="Search For a Movie Title.."
+            class="input"
+            type="text"
+            value=${this.value}
+            @change=${(event) => {
+              this.value = event.target.value;
+              this.handleMenuOption(event.target.value);
+            }}
+          />
+   
+         
+        </form>
       </div>
     `;
   }
 }
 
-window.customElements.define("lit-element-drop-down", DropDown);
+window.customElements.define("lit-element-search-bar", SearchBarApp);

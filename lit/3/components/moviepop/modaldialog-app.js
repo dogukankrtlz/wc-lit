@@ -9,9 +9,15 @@ class ModalDialogApp extends LitElement {
       }
       .wrapper {
         opacity: 0;
-        position: absolute;
         z-index: 10;
         transition: opacity 0.25s ease-in;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        -ms-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
       }
       .wrapper:not(.open) {
         visibility: hidden;

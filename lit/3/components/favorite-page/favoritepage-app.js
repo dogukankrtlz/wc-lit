@@ -4,7 +4,7 @@ import "../utilities/getisFav-app";
 import "../moviepop/modaldialog-app";
 import "../dropdown/dropdown-app";
 import "../searchBar-app/searchBar-app";
-export class MoviePageApp extends LitElement {
+export class FavoritePageApp extends LitElement {
   static styles = css`
     :host {
       display: block;
@@ -182,9 +182,6 @@ export class MoviePageApp extends LitElement {
       border-radius: 15px;
       background-color: yellow;
     }
-    .off {
-      background-color: pink;
-    }
     .option {
       display: flex;
       flex-direction: row;
@@ -197,13 +194,6 @@ export class MoviePageApp extends LitElement {
       align-items: center;
       padding: 50px;
       margin-right: 100px;
-      width: 100%;
-    }
-
-    #error {
-      display: none;
-      color: red;
-      font-size: 14px;
     }
     .dropdown {
       display: flex;
@@ -249,7 +239,6 @@ export class MoviePageApp extends LitElement {
       }
     }
   `;
-  $get = (elem) => this.shadowRoot.querySelector(elem);
 
   static get properties() {
     return {
@@ -261,8 +250,8 @@ export class MoviePageApp extends LitElement {
         genre: String,
         image_url: String,
         summary: String,
-        isFav: Boolean,
       },
+
       filteredAlbums: {
         id: Number,
         title: String,
@@ -271,47 +260,37 @@ export class MoviePageApp extends LitElement {
         genre: String,
         image_url: String,
         summary: String,
-        isFav: Boolean,
       },
-      favorite: {
-        id: Number,
-        userId: Number,
-        movieId: Number,
-      },
-      removeReq: {
-        userId: Number,
-        movieId: Number,
-      },
+      albumFavs: { type: Number },
       numAlbums: { type: Number },
+      count: Number(0),
       genre: String,
       loginId: Number,
       popup: Boolean,
       category: String,
       search_value: String,
-      favmode: String,
     };
   }
 
   constructor() {
     super();
-    this.loginId = 10;
     this.category = "ALL";
+    this.count = 0;
+    this.loginId = 10;
     this.popup = false;
     this.numAlbums;
     this.albums = [];
-    this.favorite = {};
     this.filteredAlbums = [];
-    this.favmode = true;
-
-    this.addEventListener("fav-check", (event) => {
-      console.log(event.detail.data);
+    this.albumFavs = [];
+    this.addEventListener("fav-delete", (event) => {
+      console.log(event.detail.id);
+      this.filteredAlbums = this.filteredAlbums.filter(
+        (album) => album.id != event.detail.id
+      );
     });
     this.addEventListener("search-update", (e) => {
-      e.preventDefault();
-      console.log(e.detail.searchValue);
       this.search_value = e.detail.searchValue;
       this.filterAlbumsSearch();
-      e.preventDefault();
     });
     this.addEventListener("selectionChanged", (e) => {
       this.category = e.detail.option;
@@ -359,93 +338,6 @@ export class MoviePageApp extends LitElement {
       })
     );
   }
-  removeFav(album) {
-    console.log(
-      "silinecek favoritein movieIdsi ve userIdsi" +
-        album.id +
-        "-" +
-        this.loginId +
-        "10"
-    );
-    this.removeReq.movieId = album.id;
-    this.removeReq.userId = 10;
-    console.log("removereq: " + this.removeReq);
-    if (album.id) {
-      this.deleteData("http://localhost:8080/favorite/movie", this.removeReq);
-    } else {
-      alert("ERROR!!!");
-    }
-
-    // Wrong Credentials
-  }
-  async deleteData(url = "", data = {}) {
-    // Default options are marked with *
-
-    const response = await fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        "Content-Type": "application/json",
-
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    }).then((response) => {
-      console.log("status:" + response.status);
-      console.log("status:" + response.body);
-    });
-  }
-  addFav(album) {
-    this.favorite.id = album.id * 4;
-    this.favorite.userId = 10;
-    this.favorite.movieId = album.id;
-
-    console.log(JSON.stringify(this.favorite));
-    if (this.favorite.id && this.favorite.userId && this.favorite.movieId) {
-      this.postData("http://localhost:8080/favorite", this.favorite);
-    } else {
-      alert("ERROR!!!");
-    }
-
-    // Wrong Credentials
-  }
-  async postData(url = "", data = {}) {
-    // Default options are marked with *
-
-    const response = await fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        "Content-Type": "application/json",
-
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    }).then((response) => {
-      console.log("status:" + response.status);
-      console.log("status:" + response.body);
-    });
-  }
   filterAlbumsSearch() {
     if (this.search_value == "") {
       if (this.category == "ALL") {
@@ -456,9 +348,8 @@ export class MoviePageApp extends LitElement {
         );
       }
     } else if (this.category == "ALL") {
-      console.log("2222222222222222222222222222");
-      // this.filteredAlbums = this.albums;
-      this.filteredAlbums = this.albums.filter(
+      this.filteredAlbums = this.albums;
+      this.filteredAlbums = this.filteredAlbums.filter(
         (album) => album.title.toLowerCase().indexOf(this.search_value) > -1
       );
     } else {
@@ -471,6 +362,7 @@ export class MoviePageApp extends LitElement {
     }
   }
   filterAlbums() {
+    console.log(this.albumFavs.length);
     if (this.category == "ALL") {
       this.filteredAlbums = this.albums;
     } else {
@@ -479,20 +371,56 @@ export class MoviePageApp extends LitElement {
       );
     }
   }
-  async getData(url, method) {
-    return fetch(url, { method: method })
-      .then((reponse) => {
-        return reponse.json();
-      })
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => console.error("Ha ocurrido un error", err));
+  paintFavs() {
+    return this.filteredAlbums.length >= 1 && this.albumFavs.length >= 1
+      ? this.filteredAlbums.map((album, index) => {
+          return this.filteredAlbums.length >= 1
+            ? html`
+                <div class="album">
+                  <div>${this.paintImage(album)}</div>
 
-    console.log("x:" + x);
+                  <div class="album-info">
+                    <div class="title">
+                      Title:
+                      <div class="title-data">${album.title}</div>
+                    </div>
+                    <div class="title">
+                      Release Year:
+                      <div class="title-data">${album.rel_year}</div>
+                    </div>
+
+                    <div class="title">
+                      Genre:
+                      <div class="title-data">${album.genre}</div>
+                    </div>
+                    <div class="title">
+                      Summary:
+                      <div>
+                        <div
+                          @click=${() => {
+                            this.readMore(album);
+                          }}
+                          class="summary"
+                        >
+                          ${album.summary}
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="readmore"
+                      @click=${() => {
+                        this.readMore(album);
+                      }}
+                    >
+                      See Details
+                    </div>
+                  </div>
+                </div>
+              `
+            : "";
+        })
+      : html` <div class="nodata">Nothing Found!</div>`;
   }
-
-  //http://localhost:8080/favorite/check/10/${album.id}
 
   paintAlbums() {
     return this.filteredAlbums.length >= 1
@@ -537,6 +465,7 @@ export class MoviePageApp extends LitElement {
                     >
                       See Details
                     </div>
+
                     <div class="readmore">
                       <getfav-api
                         url="http://localhost:8080/favorite/check/10/${album.id}"
@@ -545,7 +474,6 @@ export class MoviePageApp extends LitElement {
                         loginId="10"
                       ></getfav-api>
                     </div>
-                    <p id="error">Check The Rules!</p>
                   </div>
                 </div>
               `
@@ -566,19 +494,20 @@ export class MoviePageApp extends LitElement {
               <lit-element-drop-down></lit-element-drop-down>
             </div>
           </div>
-          <h2>Movies</h2>
-          <get-api
-            url="http://localhost:8080/user/movie-list"
-            method="GET"
-          ></get-api>
+          <h2>Favorites</h2>
+          <get-api url="http://localhost:8080/favorite/movies/${this.loginId}">
+            method='GET'></get-api
+          >
           <div class="modal">
             <modeldialog-app @reset-game="${this.resetGame}"></modeldialog-app>
           </div>
           <div class="albums-block">${this.paintAlbums()}</div>
+        
+          </div>
         </div>
       </div>
     `;
   }
 }
 
-customElements.define("moviepage-app", MoviePageApp);
+customElements.define("profile-favorite", FavoritePageApp);

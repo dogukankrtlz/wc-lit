@@ -76,28 +76,31 @@ export class HomeApp extends LitElement {
   render() {
     return html`
       <div id="home">
-        ${
-          !this.success
-            ? html`<div>${this.paintLandingPage()}</div> `
-            : html` <nav-bar
-                  urlSelected=${this.urlSelected}
-                  @change=${this.urlChanged}
-                  @logout=${this.stopApp}
-                ></nav-bar>
-                ${this.urlSelected === "movie-list"
-                  ? html`
-                      <moviepage-app .loginId="${this.loginId}"></moviepage-app>
-                      <footer-app></footer-app>
-                    `
-                  : this.urlSelected === "movie-add"
-                  ? html` <movie-form></movie-form> <footer-app></footer-app> `
-                  : html`
-                      <profile-form></profile-form>
-                      <footer-app></footer-app>
-                    `}`
-
-          //success
-        }
+        ${!this.success
+          ? html`<div>${this.paintLandingPage()}</div> `
+          : html`
+              <nav-bar
+                urlSelected=${this.urlSelected}
+                @change=${this.urlChanged}
+                @logout=${this.stopApp}
+              ></nav-bar>
+              ${this.urlSelected === "movie-list"
+                ? html`
+                    <moviepage-app .loginId="${this.loginId}"></moviepage-app>
+                    <footer-app></footer-app>
+                  `
+                : this.urlSelected === "movie-add"
+                ? html` <movie-form></movie-form> <footer-app></footer-app> `
+                : this.urlSelected === "user-profile"
+                ? html`
+                    <profile-form></profile-form>
+                    <footer-app></footer-app>
+                  `
+                : html`
+                    <profile-favorite></profile-favorite>
+                    <footer-app></footer-app>
+                  `}
+            `}
       </div>
     `;
   }
