@@ -19,7 +19,7 @@ export class DropDown extends LitElement {
         font-family: "Poppins";
         font-size: 16px;
         color: var(--text-color);
-        width: 140px;
+        width: 300px;
         display: flex;
         flex-direction: column;
         background-color: transparent;
@@ -27,8 +27,9 @@ export class DropDown extends LitElement {
       }
 
       .label {
-        font-size: 12px;
+        font-size: 20px;
         color: var(--primary-color);
+        color: #fffff0;
       }
 
       .head {

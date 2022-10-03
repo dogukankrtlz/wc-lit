@@ -35,7 +35,7 @@ export class HomeApp extends LitElement {
 
   constructor() {
     super(), (this.urlSelected = "movie-list");
-    this.success = true;
+    this.success = false;
     this.genre = "";
     this.loginId;
     this.login = "login";
@@ -89,15 +89,17 @@ export class HomeApp extends LitElement {
                     <moviepage-app .loginId="${this.loginId}"></moviepage-app>
                     <footer-app></footer-app>
                   `
-                : this.urlSelected === "movie-add"
-                ? html` <movie-form></movie-form> <footer-app></footer-app> `
-                : this.urlSelected === "user-profile"
-                ? html`
-                    <profile-form></profile-form>
-                    <footer-app></footer-app>
-                  `
-                : html`
-                    <profile-favorite></profile-favorite>
+                : // : this.urlSelected === "movie-add"
+                  // ? html` <movie-form></movie-form> <footer-app></footer-app> `
+                  // : this.urlSelected === "user-profile"
+                  // ? html`
+                  //     <profile-form></profile-form>
+                  //     <footer-app></footer-app>
+                  //   `
+                  html`
+                    <profile-favorite
+                      .loginId="${this.loginId}"
+                    ></profile-favorite>
                     <footer-app></footer-app>
                   `}
             `}

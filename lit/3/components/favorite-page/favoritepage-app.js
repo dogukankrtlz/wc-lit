@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit-element";
 import "../utilities/getApi-app";
 import "../utilities/getisFav-app";
+import "../utilities/getisFavFav-app";
 import "../moviepop/modaldialog-app";
 import "../dropdown/dropdown-app";
 import "../searchBar-app/searchBar-app";
@@ -97,6 +98,12 @@ export class FavoritePageApp extends LitElement {
       min-height: 300px;
       background-color: #072146;
     }
+    .results-label {
+      color: #fffff0;
+      font-size: 34px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
     .title {
       font-size: 12px;
       line-height: 24px;
@@ -169,6 +176,20 @@ export class FavoritePageApp extends LitElement {
     button:hover {
       background-position: 0 center;
     }
+    .remove-fav {
+      // color: rgb(1, 566, 1);
+      justify-content: center;
+      margin-left: 120px;
+      align-items: center;
+      text-align: center;
+      width: 40px;
+      height: 40px;
+      font-weight: 500;
+      color: #072154;
+      border-radius: 20px;
+      background-color: #ff6347;
+      position: absolute;
+    }
     .readmore {
       // color: rgb(1, 566, 1);
       justify-content: flex-start;
@@ -193,7 +214,7 @@ export class FavoritePageApp extends LitElement {
       justify-content: center;
       align-items: center;
       padding: 50px;
-      margin-right: 100px;
+      width: 80%;
     }
     .dropdown {
       display: flex;
@@ -276,14 +297,15 @@ export class FavoritePageApp extends LitElement {
     super();
     this.category = "ALL";
     this.count = 0;
-    this.loginId = 10;
+    this.loginId;
     this.popup = false;
     this.numAlbums;
     this.albums = [];
     this.filteredAlbums = [];
     this.albumFavs = [];
     this.addEventListener("fav-delete", (event) => {
-      console.log(event.detail.id);
+      event.det;
+      console.log("event detail id:" + event.detail.id);
       this.filteredAlbums = this.filteredAlbums.filter(
         (album) => album.id != event.detail.id
       );
@@ -432,6 +454,16 @@ export class FavoritePageApp extends LitElement {
                   <div>${this.paintImage(album)}</div>
 
                   <div class="album-info">
+                    <div class="remove-fav">
+                      <getfavfav-api
+                        url="http://localhost:8080/favorite/check/${this
+                          .loginId}/${album.id}"
+                        method="GET"
+                        id=${album.id}
+                        loginId="${this.loginId}"
+                      >
+                      </getfavfav-api>
+                    </div>
                     <div class="title">
                       Title:
                       <div class="title-data">${album.title}</div>
@@ -466,15 +498,6 @@ export class FavoritePageApp extends LitElement {
                     >
                       See Details
                     </div>
-
-                    <div class="readmore">
-                      <getfav-api
-                        url="http://localhost:8080/favorite/check/10/${album.id}"
-                        method="GET"
-                        id=${album.id}
-                        loginId="10"
-                      ></getfav-api>
-                    </div>
                   </div>
                 </div>
               `
@@ -487,6 +510,8 @@ export class FavoritePageApp extends LitElement {
     return html`
       <div class="pagecolor">
         <div class="container">
+        <div  class="results-label">Welcome ${this.loginId}!</div>
+
           <div class="option">
             <div class="searchbar">
               <lit-element-search-bar></lit-element-search-bar>
@@ -495,7 +520,8 @@ export class FavoritePageApp extends LitElement {
               <lit-element-drop-down></lit-element-drop-down>
             </div>
           </div>
-          <h2>Favorites</h2>
+          <div class="results-label">Favorites</div>
+          <hr />
           <get-api url="http://localhost:8080/favorite/movies/${this.loginId}">
             method='GET'></get-api
           >

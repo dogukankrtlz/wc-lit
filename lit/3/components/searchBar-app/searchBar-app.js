@@ -18,7 +18,7 @@ export class SearchBarApp extends LitElement {
         font-family: "Poppins";
         font-size: 16px;
         color: var(--text-color);
-        width: 700px;
+        width: 100%;
         display: flex;
         flex-direction: column;
         background-color: transparent;
@@ -28,13 +28,16 @@ export class SearchBarApp extends LitElement {
       }
 
       .container {
-        padding: 50px;
+        padding: 60px;
         background-color: #072146;
-        width: 489px;
+        width: 100%;
         height: 120px;
         border-radius: 20px;
         justify-content: center;
         align-items: center;
+        font-size: 30px;
+        font-weight: 700;
+        color: #fffff0;
       }
       .label {
         font-size: 12px;
@@ -172,11 +175,12 @@ export class SearchBarApp extends LitElement {
         margin-top: 10px;
       } */
       .input {
-        padding: 20px;
+        padding: 30px;
         border-radius: 10px;
         width: 100%;
         margin-top: 30px;
         margin-left: -20px;
+        font-size: 20px;
       }
     `;
   }
@@ -201,7 +205,8 @@ export class SearchBarApp extends LitElement {
   render() {
     return html`
       <div class="container">
-      
+      MOVIE LIST
+
           <input
             placeholder="Search For a Movie Title.."
             class="input"

@@ -169,14 +169,19 @@ export class MoviePageApp extends LitElement {
     button:hover {
       background-position: 0 center;
     }
+    .results-label {
+      color: #fffff0;
+      font-size: 34px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
     .readmore {
       // color: rgb(1, 566, 1);
       justify-content: flex-start;
       align-items: flex-start;
       text-align: center;
       align-self: center;
-      width: 60%;
-      margin-top: 20px;
+      width: 90px;
       font-weight: 500;
       color: #072154;
       border-radius: 15px;
@@ -184,6 +189,12 @@ export class MoviePageApp extends LitElement {
     }
     .off {
       background-color: pink;
+    }
+    .info-alt {
+      display: flex;
+      flex-direction: row;
+      margin-top: 45px;
+      justify-content: center;
     }
     .option {
       display: flex;
@@ -196,8 +207,7 @@ export class MoviePageApp extends LitElement {
       justify-content: center;
       align-items: center;
       padding: 50px;
-      margin-right: 100px;
-      width: 100%;
+      width: 80%;
     }
 
     #error {
@@ -273,6 +283,16 @@ export class MoviePageApp extends LitElement {
         summary: String,
         isFav: Boolean,
       },
+      extrafilteredAlbums: {
+        id: Number,
+        title: String,
+        rel_year: Number,
+        rating: Number,
+        genre: String,
+        image_url: String,
+        summary: String,
+        isFav: Boolean,
+      },
       favorite: {
         id: Number,
         userId: Number,
@@ -294,13 +314,15 @@ export class MoviePageApp extends LitElement {
 
   constructor() {
     super();
-    this.loginId = 10;
+    this.loginId;
     this.category = "ALL";
     this.popup = false;
     this.numAlbums;
     this.albums = [];
     this.favorite = {};
     this.filteredAlbums = [];
+    this.extrafilteredAlbums = [];
+
     this.favmode = true;
 
     this.addEventListener("fav-check", (event) => {
@@ -321,6 +343,8 @@ export class MoviePageApp extends LitElement {
     this.addEventListener("ApiData", (event) => {
       this.albums = event.detail.data;
       this.filteredAlbums = event.detail.data;
+      this.extrafilteredAlbums = event.detail.data;
+      this.filterLoadMore();
       this.filterAlbums();
     });
     this.addEventListener("open-modal", (e) => {
@@ -334,6 +358,10 @@ export class MoviePageApp extends LitElement {
       const modal = this.shadowRoot.querySelector("modeldialog-app");
       modal.open = false;
     });
+  }
+
+  filterLoadMore() {
+    this.extrafilteredAlbums = this.filteredAlbums.slice(0, 2);
   }
 
   paintImage(album) {
@@ -365,11 +393,10 @@ export class MoviePageApp extends LitElement {
       "silinecek favoritein movieIdsi ve userIdsi" +
         album.id +
         "-" +
-        this.loginId +
-        "10"
+        this.loginId
     );
     this.removeReq.movieId = album.id;
-    this.removeReq.userId = 10;
+    this.removeReq.userId = this.loginId;
     console.log("removereq: " + this.removeReq);
     if (album.id) {
       this.deleteData("http://localhost:8080/favorite/movie", this.removeReq);
@@ -408,7 +435,7 @@ export class MoviePageApp extends LitElement {
   }
   addFav(album) {
     this.favorite.id = album.id * 4;
-    this.favorite.userId = 10;
+    this.favorite.userId = this.loginId;
     this.favorite.movieId = album.id;
 
     console.log(JSON.stringify(this.favorite));
@@ -457,7 +484,6 @@ export class MoviePageApp extends LitElement {
         );
       }
     } else if (this.category == "ALL") {
-      console.log("2222222222222222222222222222");
       // this.filteredAlbums = this.albums;
       this.filteredAlbums = this.albums.filter(
         (album) => album.title.toLowerCase().indexOf(this.search_value) > -1
@@ -530,23 +556,24 @@ export class MoviePageApp extends LitElement {
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="readmore"
-                      @click=${() => {
-                        this.readMore(album);
-                      }}
-                    >
-                      See Details
-                    </div>
-                    <div class="readmore">
+                    <div class="info-alt">
+                      <div
+                        class="readmore"
+                        @click=${() => {
+                          this.readMore(album);
+                        }}
+                      >
+                        See Details
+                      </div>
+
                       <getfav-api
-                        url="http://localhost:8080/favorite/check/10/${album.id}"
+                        url="http://localhost:8080/favorite/check/${this
+                          .loginId}/${album.id}"
                         method="GET"
                         id=${album.id}
-                        loginId="10"
+                        loginId="${this.loginId}"
                       ></getfav-api>
                     </div>
-                    <p id="error">Check The Rules!</p>
                   </div>
                 </div>
               `
@@ -559,6 +586,8 @@ export class MoviePageApp extends LitElement {
     return html`
       <div class="pagecolor">
         <div class="container">
+          <div class="results-label">Welcome ${this.loginId}!</div>
+
           <div class="option">
             <div class="searchbar">
               <lit-element-search-bar></lit-element-search-bar>
@@ -567,7 +596,8 @@ export class MoviePageApp extends LitElement {
               <lit-element-drop-down></lit-element-drop-down>
             </div>
           </div>
-          <h2>Movies</h2>
+          <div class="results-label">Results</div>
+          <hr />
           <get-api
             url="http://localhost:8080/user/movie-list"
             method="GET"

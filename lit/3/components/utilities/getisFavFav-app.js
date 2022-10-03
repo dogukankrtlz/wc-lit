@@ -1,10 +1,25 @@
 import { LitElement, html, css } from "lit-element";
-import "iconify-icon";
 
-export class GetIsFavApi extends LitElement {
+export class GetIsFavFavApi extends LitElement {
   static styles = css`
     :host {
       display: block;
+    }
+
+    .readmore {
+      // color: rgb(1, 566, 1);
+      justify-content: flex-start;
+      align-items: flex-start;
+      text-align: center;
+      align-self: center;
+      width: 60%;
+      font-weight: 500;
+      color: #072154;
+      border-radius: 15px;
+      background-color: yellow;
+    }
+    .off {
+      background-color: red;
     }
   `;
 
@@ -28,6 +43,15 @@ export class GetIsFavApi extends LitElement {
     this.fav = true;
   }
 
+  // sendResponse(data) {
+  //   this.dispatchEvent(
+  //     new CustomEvent("fav-check", {
+  //       detail: { data },
+  //       bubbles: true,
+  //       composed: true,
+  //     })
+  //   );
+  // }
   removeFav(id, loginId) {
     console.log("silinecek FAV ID: " + this.favId);
     if (this.favId) {
@@ -83,12 +107,11 @@ export class GetIsFavApi extends LitElement {
     favorite.id = x * 4;
     favorite.userId = this.loginId;
     favorite.movieId = x;
-    console.log(this.loginId + "getisfav icindeki loginid");
+
     console.log(JSON.stringify(favorite));
     if (favorite.id && favorite.userId && favorite.movieId) {
       this.postData("http://localhost:8080/favorite", favorite);
     } else {
-      console.log("HATA");
       alert("ERROR!!!");
     }
 
@@ -121,7 +144,6 @@ export class GetIsFavApi extends LitElement {
         return response.json;
       })
       .catch((err) => {
-        console.log(err);
         alert("POSTDATAERROR");
       })
       .finally((this.fav = !this.fav), (this.favId = data.id));
@@ -133,46 +155,25 @@ export class GetIsFavApi extends LitElement {
       })
       .then((data) => {
         data.id != 0
-          ? ((this.favId = data.id), (this.fav = true))
-          : (this.fav = false);
+          ? (console.log("xd"), ((this.favId = data.id), (this.fav = true)))
+          : (console.log("xd2"), (this.fav = false));
       })
       .catch((err) => {
-        console.log(err);
         this.fav = false;
       });
   }
 
   render() {
-    return this.fav != true
-      ? html`
-          <div
-            @click=${() => {
-              this.addFav(this.id);
-            }}
-          >
-            <iconify-icon
-              icon="ant-design:heart-outlined"
-              style="color: red;"
-              width="50"
-              height="50"
-            ></iconify-icon>
-          </div>
-        `
-      : html`
-          <div
-            @click=${() => {
-              this.removeFav(this.id, this.loginId);
-            }}
-          >
-            <iconify-icon
-              icon="ant-design:heart-filled"
-              style="color: red;"
-              width="50"
-              height="50"
-            ></iconify-icon>
-          </div>
-        `;
+    return html`
+      <div
+        @click=${() => {
+          this.removeFav(this.id, this.loginId);
+        }}
+      >
+        X
+      </div>
+    `;
   }
 }
 
-customElements.define("getfav-api", GetIsFavApi);
+customElements.define("getfavfav-api", GetIsFavFavApi);

@@ -141,6 +141,7 @@ export class LoginApp extends LitElement {
   }
 
   goHome(loginId1) {
+    console.log("gohome:" + loginId1);
     this.dispatchEvent(
       new CustomEvent("sign", {
         detail: {
