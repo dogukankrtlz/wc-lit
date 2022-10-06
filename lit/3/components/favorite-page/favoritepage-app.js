@@ -304,11 +304,20 @@ export class FavoritePageApp extends LitElement {
     this.filteredAlbums = [];
     this.albumFavs = [];
     this.addEventListener("fav-delete", (event) => {
-      event.det;
-      console.log("event detail id:" + event.detail.id);
-      this.filteredAlbums = this.filteredAlbums.filter(
-        (album) => album.id != event.detail.id
-      );
+      fetch(`http://localhost:8080/favorite/movies/${this.loginId}`, {
+        method: "GET",
+      })
+        .then((reponse) => {
+          return reponse.json();
+        })
+        .then((data) => {
+          console.log(data);
+          this.albums = data;
+          this.filteredAlbums = data;
+        })
+        .catch((err) => console.error("Ha ocurrido un error", err));
+
+      this.filterAlbums();
     });
     this.addEventListener("search-update", (e) => {
       this.search_value = e.detail.searchValue;

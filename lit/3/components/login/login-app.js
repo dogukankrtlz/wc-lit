@@ -140,13 +140,13 @@ export class LoginApp extends LitElement {
     // Wrong Credentials
   }
 
-  goHome(loginId1) {
-    console.log("gohome:" + loginId1);
+  goHome(loginId) {
+    console.log("gohome:" + loginId);
     this.dispatchEvent(
       new CustomEvent("sign", {
         detail: {
           login: true,
-          loginId: loginId1,
+          loginId: loginId,
         },
         bubbles: true,
         composed: true,

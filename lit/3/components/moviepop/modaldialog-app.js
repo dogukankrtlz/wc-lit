@@ -26,6 +26,7 @@ class ModalDialogApp extends LitElement {
         align-items: center;
         display: flex;
         justify-content: center;
+        flex-direction: row;
         width: 100%;
         height: 100%;
         opacity: 1;
@@ -40,8 +41,7 @@ class ModalDialogApp extends LitElement {
         align-items: center;
         display: flex;
         justify-content: center;
-        flex-direction: column;
-        background: #ffffff;
+        background: #454264;
         border-radius: 13px;
         max-width: 900px;
         min-height: 600px;
@@ -71,6 +71,20 @@ class ModalDialogApp extends LitElement {
         background-position: center !important;
         background-repeat: no-repeat !important;
       }
+      #title {
+        color: #fffff0;
+      }
+      #content {
+        color: #fffff0;
+      }
+      #info {
+        border: 2px solid #fffff0;
+        height: 520px;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+      }
     `;
   }
   static get properties() {
@@ -87,7 +101,6 @@ class ModalDialogApp extends LitElement {
     this.open = false;
   }
   paintImage() {
-    console.log(this.imageUrl);
     return (this.imageUrl = "Hello"
       ? html` <div
           class="album_img"
@@ -106,9 +119,11 @@ class ModalDialogApp extends LitElement {
 
         <div class="dialog">
           <div>${this.paintImage()}</div>
-          <h1 id="title">${this.title}</h1>
-          <div id="content" class="content">${this.text}</div>
-          <button @click=${this.resetGame}>Okey</button>
+          <div id="info">
+            <h1 id="title">${this.title}</h1>
+            <div id="content" class="content">${this.text}</div>
+            <button @click=${this.resetGame}>Okey</button>
+          </div>
         </div>
       </div>
     `;

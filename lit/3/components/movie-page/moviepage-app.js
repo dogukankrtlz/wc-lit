@@ -4,6 +4,7 @@ import "../utilities/getisFav-app";
 import "../moviepop/modaldialog-app";
 import "../dropdown/dropdown-app";
 import "../searchBar-app/searchBar-app";
+import "../pagination/pagination-app";
 export class MoviePageApp extends LitElement {
   static styles = css`
     :host {
@@ -13,7 +14,21 @@ export class MoviePageApp extends LitElement {
     * {
       box-sizing: border-box;
     }
+    .loadmore {
+      margin-top: 20px;
+
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background-color: #072146;
+      padding: 30px;
+      font-size: 27px;
+      font-weight: 600;
+      color: #fffff0;
+      border-radius: 10px;
+    }
     .pagecolor {
+      padding-bottom: 200px;
       width: 100%;
       background-color: #454264;
       justify-content: center;
@@ -129,6 +144,7 @@ export class MoviePageApp extends LitElement {
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
+      padding: 2px;
       /* flex-shrink: 1;
       overflow: hidden; */
     }
@@ -138,7 +154,9 @@ export class MoviePageApp extends LitElement {
       padding: 10px 15px;
       outline: none;
     }
-
+    .green {
+      color: green;
+    }
     button {
       width: 100%;
       display: block;
@@ -174,6 +192,7 @@ export class MoviePageApp extends LitElement {
       font-size: 34px;
       font-weight: 500;
       margin-bottom: 20px;
+      padding-top: 27px;
     }
     .readmore {
       // color: rgb(1, 566, 1);
@@ -184,6 +203,7 @@ export class MoviePageApp extends LitElement {
       width: 90px;
       font-weight: 500;
       color: #072154;
+      margin-right: 20px;
       border-radius: 15px;
       background-color: yellow;
     }
@@ -309,11 +329,14 @@ export class MoviePageApp extends LitElement {
       category: String,
       search_value: String,
       favmode: String,
+      load: Number,
+      pageCount: Number,
     };
   }
 
   constructor() {
     super();
+    this.load = 12;
     this.loginId;
     this.category = "ALL";
     this.popup = false;
@@ -322,9 +345,13 @@ export class MoviePageApp extends LitElement {
     this.favorite = {};
     this.filteredAlbums = [];
     this.extrafilteredAlbums = [];
+    this.pageCount = 1;
 
     this.favmode = true;
-
+    this.addEventListener("change-page", (event) => {
+      console.log(event.detail.x);
+      this.filterPage(event.detail.x);
+    });
     this.addEventListener("fav-check", (event) => {
       console.log(event.detail.data);
     });
@@ -344,7 +371,9 @@ export class MoviePageApp extends LitElement {
       this.albums = event.detail.data;
       this.filteredAlbums = event.detail.data;
       this.extrafilteredAlbums = event.detail.data;
-      this.filterLoadMore();
+      this.pageCount = Math.ceil(this.extrafilteredAlbums.length / 12);
+      console.log("pagecount:" + this.pageCount);
+      this.filterPage(1);
       this.filterAlbums();
     });
     this.addEventListener("open-modal", (e) => {
@@ -360,13 +389,35 @@ export class MoviePageApp extends LitElement {
     });
   }
 
+  requestDetail(movie) {
+    console.log(movie);
+    this.dispatchEvent(
+      new CustomEvent("detailRequested", {
+        detail: { movie },
+      })
+    );
+  }
+  filterPage(x) {
+    let a = (x - 1) * 12;
+    let b = x * 12;
+    let c = this.filteredAlbums.length;
+    console.log("c" + c);
+    if (c > b) {
+      this.extrafilteredAlbums = this.filteredAlbums.slice(a, b);
+    } else {
+      this.extrafilteredAlbums = this.filteredAlbums.slice(a, c);
+    }
+  }
   filterLoadMore() {
-    this.extrafilteredAlbums = this.filteredAlbums.slice(0, 2);
+    this.extrafilteredAlbums = this.filteredAlbums.slice(0, this.load);
   }
 
   paintImage(album) {
     return album.image_url != "Hello"
       ? html` <div
+          @click=${() => {
+            this.requestDetail(album);
+          }}
           class="album_img"
           style="background: url(${album.image_url})"
         >
@@ -496,6 +547,9 @@ export class MoviePageApp extends LitElement {
         (album) => album.title.toLowerCase().indexOf(this.search_value) > -1
       );
     }
+    this.pageCount = Math.ceil(this.filteredAlbums.length / 12);
+    console.log("pagecount:" + this.pageCount);
+    this.filterPage(1);
   }
   filterAlbums() {
     if (this.category == "ALL") {
@@ -505,6 +559,9 @@ export class MoviePageApp extends LitElement {
         (album) => album.genre === `${this.category}`
       );
     }
+    this.pageCount = Math.ceil(this.filteredAlbums.length / 12);
+    console.log("pagecount:" + this.pageCount);
+    this.filterPage(1);
   }
   async getData(url, method) {
     return fetch(url, { method: method })
@@ -520,11 +577,24 @@ export class MoviePageApp extends LitElement {
   }
 
   //http://localhost:8080/favorite/check/10/${album.id}
+  paintPagination() {
+    return this.pageCount > 1
+      ? html`
+          <div>
+            <pagination-app .pages=${this.pageCount}></pagination-app>
+          </div>
+        `
+      : html`
+          <div>
+            <pagination-app .pages=${this.pageCount}></pagination-app>
+          </div>
+        `;
+  }
 
   paintAlbums() {
-    return this.filteredAlbums.length >= 1
-      ? this.filteredAlbums.map((album, index) => {
-          return this.filteredAlbums.length >= 1
+    return this.extrafilteredAlbums.length >= 1
+      ? this.extrafilteredAlbums.map((album, index) => {
+          return this.extrafilteredAlbums.length >= 1
             ? html`
                 <div class="album">
                   <div>${this.paintImage(album)}</div>
@@ -586,7 +656,9 @@ export class MoviePageApp extends LitElement {
     return html`
       <div class="pagecolor">
         <div class="container">
-          <div class="results-label">Welcome ${this.loginId}!</div>
+          ${this.loginId
+            ? html` <div class="results-label">Welcome ${this.loginId}!</div> `
+            : ""}
 
           <div class="option">
             <div class="searchbar">
@@ -598,6 +670,8 @@ export class MoviePageApp extends LitElement {
           </div>
           <div class="results-label">Results</div>
           <hr />
+          <br />
+          <br />
           <get-api
             url="http://localhost:8080/user/movie-list"
             method="GET"
@@ -606,6 +680,11 @@ export class MoviePageApp extends LitElement {
             <modeldialog-app @reset-game="${this.resetGame}"></modeldialog-app>
           </div>
           <div class="albums-block">${this.paintAlbums()}</div>
+          <br />
+          <br />
+          <br />
+          <br />
+          <div>${this.paintPagination()}</div>
         </div>
       </div>
     `;

@@ -177,9 +177,9 @@ export class SearchBarApp extends LitElement {
       .input {
         padding: 30px;
         border-radius: 10px;
-        width: 100%;
-        margin-top: 30px;
-        margin-left: -20px;
+        width: 86%;
+        // margin-top: 30px;
+        // margin-left: -20px;
         font-size: 20px;
       }
     `;
@@ -206,7 +206,6 @@ export class SearchBarApp extends LitElement {
     return html`
       <div class="container">
       MOVIE LIST
-
           <input
             placeholder="Search For a Movie Title.."
             class="input"

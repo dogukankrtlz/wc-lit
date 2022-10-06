@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit-element";
-
+import "iconify-icon";
 export class GetIsFavFavApi extends LitElement {
   static styles = css`
     :host {
@@ -52,16 +52,18 @@ export class GetIsFavFavApi extends LitElement {
   //     })
   //   );
   // }
-  removeFav(id, loginId) {
-    console.log("silinecek FAV ID: " + this.favId);
+  async removeFav(userId, movieId) {
+    console.log("silinecek user-movie: " + userId + "-" + movieId);
     if (this.favId) {
-      this.deleteData(`http://localhost:8080/favorite/${this.favId}`);
+      await this.deleteData(
+        `http://localhost:8080/favorite/${userId}/${movieId}`
+      );
     } else {
       alert("ERROR!!!");
     }
     this.dispatchEvent(
       new CustomEvent("fav-delete", {
-        detail: { id },
+        detail: { userId },
         bubbles: true,
         composed: true,
       })
@@ -97,57 +99,9 @@ export class GetIsFavFavApi extends LitElement {
       })
       .catch((err) => {
         alert("DELETEDATAERROR");
-      })
-      .finally((this.fav = false));
+      });
   }
-  addFav(id) {
-    let favorite = {};
 
-    var x = parseInt(id);
-    favorite.id = x * 4;
-    favorite.userId = this.loginId;
-    favorite.movieId = x;
-
-    console.log(JSON.stringify(favorite));
-    if (favorite.id && favorite.userId && favorite.movieId) {
-      this.postData("http://localhost:8080/favorite", favorite);
-    } else {
-      alert("ERROR!!!");
-    }
-
-    // Wrong Credentials
-  }
-  async postData(url = "", data = {}) {
-    // Default options are marked with *
-
-    const response = await fetch(url, {
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      headers: {
-        "Content-Type": "application/json",
-
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
-    })
-      .then((response) => {
-        return response.json;
-      })
-      .catch((err) => {
-        alert("POSTDATAERROR");
-      })
-      .finally((this.fav = !this.fav), (this.favId = data.id));
-  }
   getData() {
     fetch(this.url, { method: this.method })
       .then((reponse) => {
@@ -155,8 +109,8 @@ export class GetIsFavFavApi extends LitElement {
       })
       .then((data) => {
         data.id != 0
-          ? (console.log("xd"), ((this.favId = data.id), (this.fav = true)))
-          : (console.log("xd2"), (this.fav = false));
+          ? ((this.favId = data.id), (this.fav = true))
+          : (this.fav = false);
       })
       .catch((err) => {
         this.fav = false;
@@ -167,10 +121,14 @@ export class GetIsFavFavApi extends LitElement {
     return html`
       <div
         @click=${() => {
-          this.removeFav(this.id, this.loginId);
+          this.removeFav(this.loginId, this.id);
         }}
       >
-        X
+        <iconify-icon
+          icon="ant-design:close-circle-twotone"
+          width="40"
+          height="40"
+        ></iconify-icon>
       </div>
     `;
   }

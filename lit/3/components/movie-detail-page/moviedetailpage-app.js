@@ -1,0 +1,418 @@
+import { LitElement, html, css } from "lit-element";
+import "../utilities/getApi-app";
+import "../utilities/getisFav-app";
+import "../moviepop/modaldialog-app";
+import "../dropdown/dropdown-app";
+import "../searchBar-app/searchBar-app";
+export class MovieDetailPageApp extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+    .userId {
+      font-size: 14px;
+    }
+    .comment-top {
+      display: flex;
+      flex-direction: column;
+      margin: 4px;
+      margin-bottom: 10px;
+    }
+    .summary {
+      margin-top: 10px;
+    }
+    .year {
+      margin-top: -20px;
+    }
+    .date {
+      color: #fff4;
+      font-size: 12px;
+    }
+    .genre {
+      border-radius: 10px;
+      border: 2px solid white;
+      padding: 5px;
+      font-weight: 600;
+      margin-top: 20px;
+    }
+    .info {
+      margin-left: 10px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      height: 100%;
+    }
+    .title {
+      color: #f0e68c;
+      font-size: 29px;
+      font-family: Georgia;
+    }
+    .pagecolor {
+      display: flex;
+      padding-bottom: 200px;
+      width: 100%;
+      background-color: #454264;
+      justify-content: center;
+      align-items: center;
+      min-height: 1300px;
+    }
+    .container {
+      display: flex;
+      width: 90%;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: row;
+      margin-left: auto;
+      margin-right: auto;
+      background-color: #454264;
+      min-height: 1000px;
+    }
+    .movie {
+      width: 45%;
+      border-radius: 5px;
+      box-shadow: 3px 3px black;
+      margin-top: 50px;
+      color: #fffff0;
+      border: 1px solid;
+      padding: 20px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: row;
+      background-color: #072146;
+    }
+
+    .com {
+      margin-left: 45px;
+      width: 55%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .comments {
+      border-radius: 5px;
+
+      color: #fffff0;
+      background-color: #fffff0;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      border: 1px solid pink;
+      min-height: 400px;
+      width: 75%;
+      margin: 12px;
+    }
+    .comment {
+      width: 80%;
+      display: flex;
+      border-radius: 14px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      flex-direction: column;
+      border: 1px solid #fffff0;
+      margin-top: 25px;
+      padding-left: 15px;
+      padding-bottom: 15px;
+
+      background-color: #072146;
+      box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1),
+        0 0 0 2px rgb(255, 255, 255), 0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+    }
+    .album_img {
+      min-width: 280px;
+      height: 490px;
+      position: relative;
+      background-size: cover !important;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+    }
+    .login-block {
+      border-radius: 5px;
+      border: 1px solid pink;
+      width: 450px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+      padding: 40px;
+      margin-top: 45px;
+      margin-bottom: 20px;
+      padding-top: 40px;
+      width: 75%;
+      background-color: #072146;
+    }
+
+    #error {
+      display: none;
+      color: red;
+      font-size: 14px;
+    }
+    button {
+      border-radius: 10px;
+      width: 25%;
+      margin-bottom: 10px;
+      padding: 10px 15px;
+      outline: none;
+      min-height: 40px;
+    }
+    input {
+      font-size: 20px;
+      width: 75%;
+      margin-bottom: 10px;
+      padding: 40px;
+      border-radius: 20px;
+      outline: none;
+      margin-right: 20px;
+    }
+    button {
+      width: 25%;
+      display: block;
+      font-size: 15px;
+      line-height: 24px;
+      will-change: background-position;
+      background-size: 210% 100%;
+      background-position: 99% center;
+      background-repeat: no-repeat;
+      -webkit-transition: background-position 0.66667s
+        cubic-bezier(0.24, 0.22, 0.31, 1.07);
+      transition: background-position 0.66667s
+        cubic-bezier(0.24, 0.22, 0.31, 1.07);
+      background-color: #028484;
+      background-image: linear-gradient(100deg, #02a5a5 50%, #028484 50%);
+      color: #fff;
+      text-align: center;
+      /* padding: 16px 32px; */
+      background-color: #028484;
+      cursor: pointer;
+      margin-right: 25px;
+      text-decoration: none;
+      font-weight: 700;
+      border: none;
+      margin: 0;
+    }
+
+    button:hover {
+      background-position: 0 center;
+    }
+
+    @media screen and (max-width: 1158px) {
+      .container {
+        padding: 0px 30px 25px;
+        margin-bottom: 15px;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+      h2 {
+        font-size: 24px;
+        line-height: 20px;
+        margin-top: 30px;
+      }
+
+      .container {
+        margin-bottom: 0;
+        padding-bottom: 15px;
+      }
+    }
+  `;
+  $get = (elem) => this.shadowRoot.querySelector(elem);
+
+  static get properties() {
+    return {
+      movie: {},
+      comments: {
+        userId: Number,
+        movieId: Number,
+        message: String,
+        date: String,
+      },
+      log: Number,
+      comment: {
+        userId: Number,
+        movieId: Number,
+        message: String,
+        date: String,
+      },
+      loginId: Number,
+    };
+  }
+
+  constructor() {
+    super();
+    this.comment = {};
+    this.loginId;
+    this.movie = {};
+    this.comments = [];
+    this.log = 4;
+    this.addEventListener("ApiData", (event) => {
+      this.comments = event.detail.data;
+      console.log(event.detail.data);
+    });
+  }
+
+  paintImage(album) {
+    return album.image_url != "Hello"
+      ? html` <div
+          class="album_img"
+          style="background: url(${album.image_url})"
+        >
+          <span class="album_id">${album.rating}</span>
+        </div>`
+      : html` <div
+          class="album_img"
+          style="background: url(https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg)"
+        >
+          <span class="album_id">${album.rating}</span>
+        </div>`;
+  }
+  paintComments() {
+    return this.comments.length >= 1
+      ? this.comments.map((comment) => {
+          return html`
+            <div class="comment">
+              <div class="comment-top">
+                <div class="userId">${comment.userId}</div>
+                <div class="date">${comment.date}</div>
+              </div>
+
+              <div class="message">${comment.message}</div>
+            </div>
+          `;
+        })
+      : "";
+  }
+  async addComment() {
+    this.comment.movieId = this.movie.id;
+    this.comment.userId = this.loginId;
+
+    this.comment.message = this.$get("#newcomment").value;
+    var currentdate = new Date();
+    var datetime =
+      currentdate.getDate() +
+      "/" +
+      (currentdate.getMonth() + 1) +
+      "/" +
+      currentdate.getFullYear() +
+      " " +
+      currentdate.getHours() +
+      ":" +
+      currentdate.getMinutes() +
+      ":" +
+      currentdate.getSeconds();
+    console.log(datetime);
+    this.comment.date = datetime;
+    const error = this.$get("#error");
+
+    console.log(JSON.stringify(this.comment));
+    if (
+      this.comment.message &&
+      this.comment.userId &&
+      this.comment.movieId &&
+      this.comment.date
+    ) {
+      await this.postData("http://localhost:8080/comment", this.comment);
+      fetch(`http://localhost:8080/comment/${this.movie.id}`, {
+        method: "GET",
+      })
+        .then((reponse) => {
+          return reponse.json();
+        })
+        .then((data) => {
+          this.comments = data;
+        })
+        .catch((err) => console.error("Ha ocurrido un error", err));
+    } else {
+      error.style.display = "block";
+    }
+
+    // Wrong Credentials
+  }
+  async postData(url = "", data = {}) {
+    // Default options are marked with *
+
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Content-Type": "application/json",
+
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    })
+      .then((response) => {
+        console.log(response.status);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }
+  getData() {}
+
+  render() {
+    return html`
+      <div class="pagecolor">
+        <div class="container">
+          <get-api
+            method="GET"
+            url="http://localhost:8080/comment/${this.movie.id}"
+          >
+          </get-api>
+          <div class="movie">
+            <div>${this.paintImage(this.movie)}</div>
+
+            <div class="info">
+              <div class="title">
+                <h2>${this.movie.title}</h2>
+              </div>
+              <div class="year">${this.movie.rel_year}</div>
+              <div class="genre">${this.movie.genre}</div>
+              <div class="summary">${this.movie.summary}</div>
+            </div>
+          </div>
+          <div class="com">
+            <div class="login-block">
+              <input
+                id="newcomment"
+                type="text"
+                name="newcomment"
+                placeholder="Add New Comment"
+                value=""
+              />
+
+              <p id="error">Empty Comment!</p>
+              <button
+                @click=${() => {
+                  this.addComment();
+                }}
+              >
+                SAVE Comment
+              </button>
+            </div>
+            <div class="comments">${this.paintComments()}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+customElements.define("movie-detail-app", MovieDetailPageApp);

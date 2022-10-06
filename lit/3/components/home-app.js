@@ -30,14 +30,16 @@ export class HomeApp extends LitElement {
       login: String,
       urlSelected: {},
       success: { type: Boolean },
+      movie: {},
     };
   }
 
   constructor() {
     super(), (this.urlSelected = "movie-list");
-    this.success = false;
+    this.success = true;
+    this.movie = {};
     this.genre = "";
-    this.loginId;
+    this.loginId = 1;
     this.login = "login";
   }
 
@@ -51,12 +53,17 @@ export class HomeApp extends LitElement {
   loginRequested() {
     this.login = "login";
   }
+  detailRequested(e) {
+    this.movie = e.detail.movie;
+    this.urlSelected = "movie-detail-app";
+  }
 
   startApp(e) {
     this.loginId = e.detail.loginId;
     this.success = true;
   }
   stopApp(e) {
+    this.urlSelected = "movie-list";
     this.loginId = 0;
     this.success = false;
   }
@@ -86,20 +93,31 @@ export class HomeApp extends LitElement {
               ></nav-bar>
               ${this.urlSelected === "movie-list"
                 ? html`
-                    <moviepage-app .loginId="${this.loginId}"></moviepage-app>
+                    <moviepage-app
+                      @detailRequested=${this.detailRequested}
+                      .loginId="${this.loginId}"
+                    ></moviepage-app>
                     <footer-app></footer-app>
                   `
                 : // : this.urlSelected === "movie-add"
-                  // ? html` <movie-form></movie-form> <footer-app></footer-app> `
-                  // : this.urlSelected === "user-profile"
-                  // ? html`
-                  //     <profile-form></profile-form>
-                  //     <footer-app></footer-app>
-                  //   `
-                  html`
+                // ? html` <movie-form></movie-form> <footer-app></footer-app> `
+                // : this.urlSelected === "user-profile"
+                // ? html`
+                //     <profile-form></profile-form>
+                //     <footer-app></footer-app>
+                //   `
+                this.urlSelected === "user-favorites"
+                ? html`
                     <profile-favorite
                       .loginId="${this.loginId}"
                     ></profile-favorite>
+                    <footer-app></footer-app>
+                  `
+                : html`
+                    <movie-detail-app
+                      .movie="${this.movie}"
+                      .loginId=${this.loginId}
+                    ></movie-detail-app>
                     <footer-app></footer-app>
                   `}
             `}

@@ -17,7 +17,7 @@ export class DropDown extends LitElement {
         --text-color: #a59bff;
 
         font-family: "Poppins";
-        font-size: 16px;
+        font-size: 20px;
         color: var(--text-color);
         width: 300px;
         display: flex;
@@ -27,7 +27,7 @@ export class DropDown extends LitElement {
       }
 
       .label {
-        font-size: 20px;
+        font-size: 27px;
         color: var(--primary-color);
         color: #fffff0;
       }

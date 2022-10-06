@@ -153,8 +153,8 @@ export class GetIsFavApi extends LitElement {
             <iconify-icon
               icon="ant-design:heart-outlined"
               style="color: red;"
-              width="50"
-              height="50"
+              width="44"
+              height="44"
             ></iconify-icon>
           </div>
         `
@@ -167,8 +167,8 @@ export class GetIsFavApi extends LitElement {
             <iconify-icon
               icon="ant-design:heart-filled"
               style="color: red;"
-              width="50"
-              height="50"
+              width="44"
+              height="44"
             ></iconify-icon>
           </div>
         `;

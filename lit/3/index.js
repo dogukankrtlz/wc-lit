@@ -12,5 +12,5 @@ import "./components/searchBar-app/searchBar-app";
 import "./components/favorite-page/favoritepage-app";
 import "./components/utilities/getisFav-app";
 import "./components/utilities/getisFavFav-app";
-
+import "./components/movie-detail-page/moviedetailpage-app";
 import "./components/utilities/getApi-app";
