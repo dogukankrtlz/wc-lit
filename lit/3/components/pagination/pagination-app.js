@@ -14,18 +14,28 @@ export class PaginationApp extends LitElement {
       align-items: center;
       display: flex;
       flex-direction: row;
+      max-width: 100%;
+
+      flex-wrap: wrap;
     }
     button {
       margin: 4px;
       padding: 12px;
       font-size: 13px;
       font-weight: 600;
+      min-height: 40px;
+      min-width: 40px;
+      max-height: 40px;
+      max-width: 40px;
     }
     .logo {
       display: block;
       height: 120px;
       padding: 10px 0;
       margin: 0 auto;
+    }
+    .main {
+      background-color: green;
     }
     #info {
       margin-top: 20px;
@@ -46,6 +56,11 @@ export class PaginationApp extends LitElement {
         reflect: true,
         attribute: true,
       },
+      activePage: {
+        type: Number,
+        reflect: true,
+        attribute: true,
+      },
       fake: {},
     };
   }
@@ -54,16 +69,17 @@ export class PaginationApp extends LitElement {
     super();
     this.fake = [];
     this.pages;
+    this.activePage;
   }
 
   connectedCallback() {
     super.connectedCallback();
-
     for (let i = 0; i < this.pages; i++) {
       this.fake[i] = i + 1;
+      console.log("xd");
     }
-    console.log(this.fake);
-    console.log(this.pages);
+
+    // 3 4 5 6 7
   }
   changePage(x) {
     this.dispatchEvent(
@@ -76,22 +92,36 @@ export class PaginationApp extends LitElement {
   }
 
   paintButtons() {
-    return this.fake.length >= 1
-      ? this.fake.map((x) => {
-          return html`
-            <button
-              @click=${() => {
-                this.changePage(x);
-              }}
-            >
-              ${x}
-            </button>
-          `;
+    return this.activePage >= 1
+      ? this.fake.map((x, index) => {
+          return index != this.activePage - 1
+            ? html`
+                <div>
+                  <button
+                    @click=${() => {
+                      this.changePage(x);
+                    }}
+                  >
+                    ${x}
+                  </button>
+                </div>
+              `
+            : html`
+                <div class="main">
+                  <button
+                    @click=${() => {
+                      this.changePage(x);
+                    }}
+                  >
+                    ${x}
+                  </button>
+                </div>
+              `;
         })
       : "";
   }
   render() {
-    return html` <div class="container">>>${this.paintButtons()}<<</div> `;
+    return html` <div class="container">${this.paintButtons()}</div> `;
   }
 }
 customElements.define("pagination-app", PaginationApp);

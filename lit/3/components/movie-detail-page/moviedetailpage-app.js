@@ -4,6 +4,7 @@ import "../utilities/getisFav-app";
 import "../moviepop/modaldialog-app";
 import "../dropdown/dropdown-app";
 import "../searchBar-app/searchBar-app";
+import "../pagination/pagination-app";
 export class MovieDetailPageApp extends LitElement {
   static styles = css`
     :host {
@@ -234,6 +235,12 @@ export class MovieDetailPageApp extends LitElement {
         message: String,
         date: String,
       },
+      filteredComments: {
+        userId: Number,
+        movieId: Number,
+        message: String,
+        date: String,
+      },
       log: Number,
       comment: {
         userId: Number,
@@ -242,6 +249,8 @@ export class MovieDetailPageApp extends LitElement {
         date: String,
       },
       loginId: Number,
+      pageCount: Number,
+      activePage: Number,
     };
   }
 
@@ -251,13 +260,49 @@ export class MovieDetailPageApp extends LitElement {
     this.loginId;
     this.movie = {};
     this.comments = [];
+    this.activePage = 1;
+    this.filteredComments = [];
+
     this.log = 4;
+    this.pageCount = 1;
     this.addEventListener("ApiData", (event) => {
       this.comments = event.detail.data;
+      this.filteredComments = event.detail.data;
       console.log(event.detail.data);
+      this.pageCount = Math.ceil(this.comments.length / 5);
+      this.filterPage(1);
+    });
+    this.addEventListener("change-page", (event) => {
+      console.log(event.detail.x);
+      this.activePage = 0;
+      this.filterPage(event.detail.x);
     });
   }
-
+  connectedCallback() {
+    super.connectedCallback();
+    console.log("connected");
+  }
+  attributeChangedCallback() {
+    this.pageCount = Math.ceil(this.comments.length / 5);
+    console.log("pagecount::" + this.pageCount);
+    MovieDetailPageApp;
+  }
+  paintPagination() {
+    return this.pageCount > 1
+      ? html`
+          <div>
+            <pagination-app
+              .activePage=${this.activePage}
+              .pages=${this.pageCount}
+            ></pagination-app>
+          </div>
+        `
+      : html`
+          <div>
+            <pagination-app .activePage=${1} .pages=${1}></pagination-app>
+          </div>
+        `;
+  }
   paintImage(album) {
     return album.image_url != "Hello"
       ? html` <div
@@ -273,9 +318,23 @@ export class MovieDetailPageApp extends LitElement {
           <span class="album_id">${album.rating}</span>
         </div>`;
   }
+  filterPage(x) {
+    let a = (x - 1) * 5;
+    let b = x * 5;
+    let c = this.comments.length;
+    console.log("c" + c);
+    if (c > b) {
+      this.filteredComments = this.comments.slice(a, b);
+    } else {
+      this.filteredComments = this.comments.slice(a, c);
+    }
+    this.activePage = x;
+
+    console.log(this.activePage);
+  }
   paintComments() {
-    return this.comments.length >= 1
-      ? this.comments.map((comment) => {
+    return this.filteredComments.length >= 1
+      ? this.filteredComments.map((comment) => {
           return html`
             <div class="comment">
               <div class="comment-top">
@@ -290,26 +349,30 @@ export class MovieDetailPageApp extends LitElement {
       : "";
   }
   async addComment() {
+    /////////////
+    this.pageCount = 0;
+    this.activePage = 0;
     this.comment.movieId = this.movie.id;
     this.comment.userId = this.loginId;
-
     this.comment.message = this.$get("#newcomment").value;
-    var currentdate = new Date();
-    var datetime =
-      currentdate.getDate() +
-      "/" +
-      (currentdate.getMonth() + 1) +
-      "/" +
-      currentdate.getFullYear() +
-      " " +
-      currentdate.getHours() +
-      ":" +
-      currentdate.getMinutes() +
-      ":" +
-      currentdate.getSeconds();
-    console.log(datetime);
-    this.comment.date = datetime;
+    var date2 = new Date().toISOString().substr(0, 19).replace("T", " ");
+    this.comment.date = date2;
     const error = this.$get("#error");
+
+    // var currentdate = new Date();
+    // var datetime =
+    //   currentdate.getDate() +
+    //   "/" +
+    //   (currentdate.getMonth() + 1) +
+    //   "/" +
+    //   currentdate.getFullYear() +
+    //   " " +
+    //   currentdate.getHours() +
+    //   ":" +
+    //   currentdate.getMinutes() +
+    //   ":" +
+    //   currentdate.getSeconds();
+    // console.log(datetime);
 
     console.log(JSON.stringify(this.comment));
     if (
@@ -327,6 +390,9 @@ export class MovieDetailPageApp extends LitElement {
         })
         .then((data) => {
           this.comments = data;
+          this.pageCount = Math.ceil(this.comments.length / 5);
+
+          this.filterPage(1);
         })
         .catch((err) => console.error("Ha ocurrido un error", err));
     } else {
@@ -365,7 +431,6 @@ export class MovieDetailPageApp extends LitElement {
         alert(err);
       });
   }
-  getData() {}
 
   render() {
     return html`
@@ -408,6 +473,7 @@ export class MovieDetailPageApp extends LitElement {
               </button>
             </div>
             <div class="comments">${this.paintComments()}</div>
+            <div>${this.paintPagination()}</div>
           </div>
         </div>
       </div>

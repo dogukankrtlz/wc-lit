@@ -331,6 +331,7 @@ export class MoviePageApp extends LitElement {
       favmode: String,
       load: Number,
       pageCount: Number,
+      activePage: Number,
     };
   }
 
@@ -346,7 +347,7 @@ export class MoviePageApp extends LitElement {
     this.filteredAlbums = [];
     this.extrafilteredAlbums = [];
     this.pageCount = 1;
-
+    this.activePage = 1;
     this.favmode = true;
     this.addEventListener("change-page", (event) => {
       console.log(event.detail.x);
@@ -407,6 +408,7 @@ export class MoviePageApp extends LitElement {
     } else {
       this.extrafilteredAlbums = this.filteredAlbums.slice(a, c);
     }
+    this.activePage = x;
   }
   filterLoadMore() {
     this.extrafilteredAlbums = this.filteredAlbums.slice(0, this.load);
@@ -581,12 +583,18 @@ export class MoviePageApp extends LitElement {
     return this.pageCount > 1
       ? html`
           <div>
-            <pagination-app .pages=${this.pageCount}></pagination-app>
+            <pagination-app
+              .activePage=${this.activePage}
+              .pages=${this.pageCount}
+            ></pagination-app>
           </div>
         `
       : html`
           <div>
-            <pagination-app .pages=${this.pageCount}></pagination-app>
+            <pagination-app
+              .activePage=${this.activePage}
+              .pages=${this.pageCount}
+            ></pagination-app>
           </div>
         `;
   }
