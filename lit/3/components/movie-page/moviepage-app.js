@@ -692,7 +692,9 @@ export class MoviePageApp extends LitElement {
           <br />
           <br />
           <br />
-          <div>${this.paintPagination()}</div>
+          ${this.extrafilteredAlbums.length > 0
+            ? html` <div>${this.paintPagination()}</div> `
+            : ""}
         </div>
       </div>
     `;

@@ -168,20 +168,6 @@ class NavBar extends LitElement {
         selected: "movie-list",
         all: true,
       },
-      // {
-      //   text: "ADD NEW MOVİE",
-      //   active: false,
-      //   url: "#",
-      //   selected: "movie-add",
-      //   all: true,
-      // },
-      // {
-      //   text: "PROFILE",
-      //   active: false,
-      //   url: "#",
-      //   selected: "user-profile",
-      //   all: true,
-      // },
       {
         text: "FAVORITES",
         active: false,

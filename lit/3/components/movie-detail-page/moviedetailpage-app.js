@@ -269,7 +269,7 @@ export class MovieDetailPageApp extends LitElement {
       this.comments = event.detail.data;
       this.filteredComments = event.detail.data;
       console.log(event.detail.data);
-      this.pageCount = Math.ceil(this.comments.length / 5);
+      this.pageCount = Math.ceil(this.comments.length / 4);
       this.filterPage(1);
     });
     this.addEventListener("change-page", (event) => {
@@ -283,7 +283,7 @@ export class MovieDetailPageApp extends LitElement {
     console.log("connected");
   }
   attributeChangedCallback() {
-    this.pageCount = Math.ceil(this.comments.length / 5);
+    this.pageCount = Math.ceil(this.comments.length / 4);
     console.log("pagecount::" + this.pageCount);
     MovieDetailPageApp;
   }
@@ -319,8 +319,8 @@ export class MovieDetailPageApp extends LitElement {
         </div>`;
   }
   filterPage(x) {
-    let a = (x - 1) * 5;
-    let b = x * 5;
+    let a = (x - 1) * 4;
+    let b = x * 4;
     let c = this.comments.length;
     console.log("c" + c);
     if (c > b) {
@@ -390,7 +390,7 @@ export class MovieDetailPageApp extends LitElement {
         })
         .then((data) => {
           this.comments = data;
-          this.pageCount = Math.ceil(this.comments.length / 5);
+          this.pageCount = Math.ceil(this.comments.length / 4);
 
           this.filterPage(1);
         })
@@ -473,7 +473,9 @@ export class MovieDetailPageApp extends LitElement {
               </button>
             </div>
             <div class="comments">${this.paintComments()}</div>
-            <div>${this.paintPagination()}</div>
+            ${this.filteredComments.length > 0
+              ? html` <div>${this.paintPagination()}</div> `
+              : ""}
           </div>
         </div>
       </div>
