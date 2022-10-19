@@ -201,11 +201,27 @@ export class MoviePageApp extends LitElement {
       text-align: center;
       align-self: center;
       width: 90px;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 14px;
       color: #072154;
       margin-right: 20px;
       border-radius: 15px;
       background-color: yellow;
+    }
+    .gomoviepage {
+      justify-content: flex-start;
+      align-items: flex-start;
+      text-align: center;
+      align-self: center;
+      width: 90px;
+      color: #072154;
+      margin-right: 20px;
+      border-radius: 15px;
+      margin-left: -43px;
+      margin-top: -5px;
+      font-weight: 600;
+      font-size: 14px;
+      background-color: #ff9;
     }
     .off {
       background-color: pink;
@@ -350,7 +366,6 @@ export class MoviePageApp extends LitElement {
     this.activePage = 1;
     this.favmode = true;
     this.addEventListener("change-page", (event) => {
-      console.log(event.detail.x);
       this.filterPage(event.detail.x);
     });
     this.addEventListener("fav-check", (event) => {
@@ -358,7 +373,6 @@ export class MoviePageApp extends LitElement {
     });
     this.addEventListener("search-update", (e) => {
       e.preventDefault();
-      console.log(e.detail.searchValue);
       this.search_value = e.detail.searchValue;
       this.filterAlbumsSearch();
       e.preventDefault();
@@ -373,7 +387,6 @@ export class MoviePageApp extends LitElement {
       this.filteredAlbums = event.detail.data;
       this.extrafilteredAlbums = event.detail.data;
       this.pageCount = Math.ceil(this.extrafilteredAlbums.length / 12);
-      console.log("pagecount:" + this.pageCount);
       this.filterPage(1);
       this.filterAlbums();
     });
@@ -550,7 +563,6 @@ export class MoviePageApp extends LitElement {
       );
     }
     this.pageCount = Math.ceil(this.filteredAlbums.length / 12);
-    console.log("pagecount:" + this.pageCount);
     this.filterPage(1);
   }
   filterAlbums() {
@@ -562,7 +574,6 @@ export class MoviePageApp extends LitElement {
       );
     }
     this.pageCount = Math.ceil(this.filteredAlbums.length / 12);
-    console.log("pagecount:" + this.pageCount);
     this.filterPage(1);
   }
   async getData(url, method) {
@@ -574,8 +585,6 @@ export class MoviePageApp extends LitElement {
         return data;
       })
       .catch((err) => console.error("Ha ocurrido un error", err));
-
-    console.log("x:" + x);
   }
 
   //http://localhost:8080/favorite/check/10/${album.id}
@@ -651,6 +660,14 @@ export class MoviePageApp extends LitElement {
                         id=${album.id}
                         loginId="${this.loginId}"
                       ></getfav-api>
+                    </div>
+                    <div
+                      class="gomoviepage"
+                      @click=${() => {
+                        this.requestDetail(album);
+                      }}
+                    >
+                      Movie Page
                     </div>
                   </div>
                 </div>

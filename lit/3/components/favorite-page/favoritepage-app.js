@@ -290,6 +290,8 @@ export class FavoritePageApp extends LitElement {
       popup: Boolean,
       category: String,
       search_value: String,
+      pageCount: Number,
+      activePage: Number,
     };
   }
 
@@ -303,6 +305,8 @@ export class FavoritePageApp extends LitElement {
     this.albums = [];
     this.filteredAlbums = [];
     this.albumFavs = [];
+    this.pageCount = 1;
+    this.activePage = 1;
     this.addEventListener("fav-delete", (event) => {
       fetch(`http://localhost:8080/favorite/movies/${this.loginId}`, {
         method: "GET",
@@ -514,6 +518,34 @@ export class FavoritePageApp extends LitElement {
         })
       : html` <div class="nodata">Nothing Found!</div>`;
   }
+  filterPage(x) {
+    let a = (x - 1) * 12;
+    let b = x * 12;
+    let c = this.filteredAlbums.length;
+    console.log("c" + c);
+    if (c > b) {
+      this.extrafilteredAlbums = this.filteredAlbums.slice(a, b);
+    } else {
+      this.extrafilteredAlbums = this.filteredAlbums.slice(a, c);
+    }
+    this.activePage = x;
+  }
+  paintPagination() {
+    return this.pageCount > 1
+      ? html`
+          <div>
+            <pagination-app
+              .activePage=${this.activePage}
+              .pages=${this.pageCount}
+            ></pagination-app>
+          </div>
+        `
+      : html`
+          <div>
+            <pagination-app .activePage=${1} .pages=${1}></pagination-app>
+          </div>
+        `;
+  }
 
   render() {
     return html`
@@ -538,7 +570,11 @@ export class FavoritePageApp extends LitElement {
             <modeldialog-app @reset-game="${this.resetGame}"></modeldialog-app>
           </div>
           <div class="albums-block">${this.paintAlbums()}</div>
-        
+          ${
+            this.filteredAlbums.length > 0
+              ? html` <div>${this.paintPagination()}</div> `
+              : ""
+          }
           </div>
         </div>
       </div>
